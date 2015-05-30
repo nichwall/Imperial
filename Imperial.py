@@ -70,12 +70,19 @@ class Player:
 			self.neutral += neutral
 			self.darkside += darkside
 		print "You now have {} Light Side points, {} Dark Side points, and {} Neutral Force points.".format(self.lightside, self.darkside, self.neutral)
+	def EarnCredits(self,amount):
+		self.credit += amount
+		print "You gain {} credits, and now have {} credits.".format(amount, player.credit)
 
 class Creature:
 	def __init__(self,name="",health=100,baseAtk=100):
 		self.name = name
 		self.health = health
 		self.attackMod = baseAtk
+
+class Planet:
+	def __init__(self):
+		pass
 
 ##########################################################################################################################################################
 def FactionAndClass(player):
@@ -332,10 +339,6 @@ def SithFight(player, enemyname, amountenemies, enemyhealth):
 					print "{} attacks you for {} damage, leaving you with {} health.".format(enemyname, eattack, player.health)
 			HealChoice(player)
 
-def Credits(player, amount):
-	player.credit += amount
-	print "You gain {} credits, and now have {} credits.".format(amount, player.credit)
-
 #############################################################################################################################################################
 def KorribanTomb(player):
 	print """You enter the tomb cautiously. As you do, something stirs in your gut. Hmm.
@@ -574,13 +577,13 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 			loot = random.random() * 100
 			if loot > 80:
 				print "You found some credits!"
-				Credits(player, math.floor(1250 * random.random()))
+				player.EarnCredits(math.floor(1250 * random.random()))
 			elif loot < 80 and loot > 70:
 				print "Oh look, a shyrack."
 				AnimalAttack(player)
 			elif loot < 70 and loot > 35:
 				print "You found a small stash of credits!"
-				Credits(player, math.floor(random.random() * 70))
+				player.EarnCredits(math.floor(random.random() * 70))
 			elif loot < 35 and loot > 30:
 				print "You found a large stash of goods."
 				player.credit += math.floor(random.random() * 10000)
@@ -634,7 +637,7 @@ def FindMentor1(player):
 	print "..... What a surprise."
 	SithFight(player, 'Acoloyte', 4, 70)
 	print "You collect the credits from their bodies."
-	Credits(player, math.floor(random.random() * 5000))
+	player.EarnCredits(math.floor(random.random() * 5000))
 	raw_input("Enter any key to continue: ")
 	print "You enter the Academy cautiously."
 	print "You've heard all about the ruthlessness and cunning of the Sith."
@@ -661,7 +664,7 @@ You can see a massive building in the distance."""
 			luck = 100 * random.random()
 			if luck < 25:
 				print "You found a couple credits. Nice."
-				Credits(player, 2)
+				player.EarnCredits(2)
 			if luck < 70 and luck > 40:
 				AnimalAttack(player)
 		choice = raw_input("1 to move on, 2 to keep exploring: ")
@@ -1387,7 +1390,7 @@ def ChasingGhosts(player):
 		print "There better be some good loot here for a turret like that."
 		raw_input("Enter any key to continue on: ")
 		print "You slip into the vault."
-		Credits(player, 75000)
+		player.EarnCredits(75000)
 		print "You see two Holocrons. The security on them ensures you'll only be able to get to one of them."
 		print "Which do you take: the Jedi or Sith Holocron?"
 		take = raw_input("(1)Sith or (2)Jedi: ")
@@ -1422,7 +1425,7 @@ def ChasingGhosts(player):
 	print "You make sure to pillage the di'kut's Archives for some Jedi and Sith holocrons."
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	print "You also disover a stash of creds."
-	Credits(player, math.floor(random.random() * 10000))
+	player.EarnCredits(math.floor(random.random() * 10000))
 	raw_input("Enter any key to continue: ")
 	print "You trudge back into the Citadel where Imperius makes her lair."
 	print "She smiles, thanking you for your service, and you recive your next mission."
@@ -1675,7 +1678,7 @@ def MandolorianClans(player):
 	if player.classname == 'Assassin':
 		print "You slip past the guards, cloaking yourself in the Force."
 		print "For good measure, you go ahead and pickpocket them."
-		Credits(player, math.floor(random.random() * 1750))
+		player.EarnCredits(math.floor(random.random() * 1750))
 	else:
 		print "You bear down on them, sabers flashing."
 		SithFight(player, "Mando'ad", 2, 350)
@@ -1704,7 +1707,7 @@ def MandolorianClans(player):
 	print "You stoop to grab the fallen datapad, marking the position of the ruins you'll need to go next."
 	print "You head out, cheerfully looting the tomb of its relics on the way out, including some Jedi Holocrons."
 	player.AddForcePoints(lightside=70,darkside=20,neutral=10)
-	Credits(player, 5000)
+	player.EarnCredits(5000)
 	raw_input("Enter any key to continue: ")
 	
 def Ruins(player):
