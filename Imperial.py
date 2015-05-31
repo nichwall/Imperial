@@ -775,27 +775,39 @@ def ExploreTown1(player):
 			print "10 credits for each maximum health point."
 			print "20 credits for each medpac."
 			print "You may also restore yourself to full health for 30 credits."
-			med = raw_input("Enter the number of medpacs you wish to buy: ")
-			heal = raw_input("Enter the number of maximum health points you wish to gain: ")
-			full = raw_input("Enter 1 to fully heal yourself: ")
-			if med.isdigit() and heal.isdigit():
+			print "You have {} credits.".format(player.credit)
+			# Displays how many medpacks you can buy
+			med = raw_input("Enter the number of medpacs you wish to buy (max {}): ".format(player.credit/20))
+			if med.isdigit():
 				med = int(med)
-				heal = int(heal)
 				medcost = med * 20
-				healcost = heal * 10
-				total = healcost + medcost
-				if medcost + healcost > player.credit:
-					print "You don't have enough credits for that."
-				else:
-					player.credit -= total
-					player.maxhealth += heal
+				# Check if you have enough money to buy medpacks
+				if medcost <= player.credit:
+					player.credit -= medcost
 					player.medpacs += med
-					print "You bought {} medpacs and {} maximum health points for {} credits, leaving you with {} credits.".format(med, heal, total, player.credit)
-				if full == '1':
-					fullcost = 30
+					print "You bought {} medpacks and now have {} medpacks, leaving you with {} credits.".format(med, player.medpacks, player.credit)
+				else:
+					print "You don't have enough credits for that."
+			# Check whether to increase max health
+			heal = raw_input("Enter the number of maximum health points you wish to gain (max {}): ".format(player.credit/10))
+			if heal.isdigit():
+				healcost = heal * 10
+				if healcost <= player.credit:
+					player.maxhealth += heal
+					player.credit -= healcost
+					print "Your maximum health is now {}, leaving you with {} credits.".format(player.maxhealth, player.credit)
+				else:
+					print "You don't have enough credits for that."
+			print "You have {}/{} health and {} credits.".format(player.health, player.maxhealth, player.credit)
+			full = raw_input("Enter 1 to fully heal yourself: ")
+			if full == '1':
+				fullcost = 30
+				if fullcost <= player.credit:
 					player.health = player.maxhealth
 					player.credit -= fullcost
 					print "You healed yourself fully!"
+				else:
+					print "You don't have enough credits for that..."
 			else:
 				print "You did not enter a number."
 		if choose == '3':
