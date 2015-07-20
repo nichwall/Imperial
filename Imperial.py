@@ -65,10 +65,13 @@ class Player:
 		self.medpacks += medpackGain
 		self.damage += damageGain
 	def AddForcePoints(self, lightside=0, neutral=0, darkside=0):
-		if lightside.isdigit() and neutral.isdigit() and darkside.isdigit():
+		#if lightside.isdigit() and neutral.isdigit() and darkside.isdigit():
+		try:
 			self.lightside += lightside
 			self.neutral += neutral
 			self.darkside += darkside
+		except:
+			print "ERROR: INVALID FORCE POINTS"
 		print "You now have {} Light Side points, {} Dark Side points, and {} Neutral Force points.".format(self.lightside, self.darkside, self.neutral)
 	def EarnCredits(self,amount):
 		self.credit += amount
@@ -85,29 +88,38 @@ class Planet:
 		pass
 
 ##########################################################################################################################################################
+
+def getPlayerChoice(low, high, dispMessage):
+	choice = -100000
+	while (choice < low) or (choice > high):
+		inp = raw_input(dispMessage)
+		if (inp.isdigit()):
+			choice = eval(inp)
+	return choice
+
+##########################################################################################################################################################
 def FactionAndClass(player):
 	player.faction = 'Empire'
 	print "(1) Sith Marauder: medium DPS, medium health"
 	print "(2) Sith Assassin: high DPS, low health"
 	print "(3) Sith Juggernaut: low DPS, high health"
-	classtype = int(raw_input("Input your chosen class type: "))
+	classtype = getPlayerChoice(1,3,"Input your chosen class type: ")
 	if classtype == 1:
-		classname = 'Marauder'
+		player.classname = 'Marauder'
 		player.health += 70
 		player.damage += 60
 		player.maxhealth = 170
-	if classtype == 2:
-		classname = 'Assassin'
+	elif classtype == 2:
+		player.classname = 'Assassin'
 		player.credit += 500
 		player.health += 20
 		player.damage += 75
 		player.maxhealth = 120
-	if classtype == 3:
-		classname = 'Juggernaut'
+	elif classtype == 3:
+		player.classname = 'Juggernaut'
 		player.health += 165
 		player.damage += 45
 		player.maxhealth = 265
-	player.classname = classname
 	player.classtype = classtype
 	return player
 
@@ -174,6 +186,7 @@ def HealChoice(player):
 			print "You have {} medpacs.".format(player.medpacs)
 		else:
 			print "You have no more medpacs!"
+		return
 	print "You chose not to heal."
 
 def AnimalAttack(player):
@@ -347,7 +360,7 @@ This place is filled with darkness. Do you embrace it?"""
 	print "1: Light Side"
 	print "2: Neutral Side"
 	print "3: Dark Side"
-	choice = int(raw_input("You choose: "))
+	choice = getPlayerChoice(1,3,"You choose: ")
 	if choice == 1:
 		player.AddForcePoints(lightside=40,darkside=0,neutral=15)
 	if choice == 2:
@@ -356,11 +369,12 @@ This place is filled with darkness. Do you embrace it?"""
 		player.AddForcePoints(lightside=0,darkside=40,neutral=15)
 	print """You continue on through the tomb. A shyrack perches on top of a statue.
 You come to a fork in the road. 3 tunnels gape in front of you."""
+	#** Tunnel picking error
 	print "Take your pick:"
 	print "1: The left tunnel"
 	print "2: The middle tunnel"
 	print "3: The right tunnel"
-	pick = int(raw_input("You go down tunnel: "))
+	pick = getPlayerChoice(1,3,"You go down tunnel: ")
 	if pick == 1:
 		print "You head down the left tunnel."
 		print "Three shyracks attack you!"
@@ -390,6 +404,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 		print "You continue down the tomb."
 		print "There. A moldering crypt lies before you."
 		print "Loot the crypt?"
+		#** ERROR ON 3
 		loot = int(raw_input("1 for looting, 2 for leaving, and 3 to continue looking around: "))
 		if loot == 1:
 			print "Naughty, naughty."
@@ -616,7 +631,7 @@ You could find a friend, or you may find some information that could be useful."
 	print '2: Head to the wilds.'
 	print '3: Enter the cantina.'
 	print '4: Keep looking around town.'
-	path = raw_input("Which way do you go? ")
+	path = getPlayerChoice(1,4,"Which way do you go? ")
 	return path
 
 def FindMentor1(player):
@@ -826,21 +841,24 @@ def ExploreTown1(player):
 				except:
 					print "Please enter numbers for the health and number of enemies."
 		choose = raw_input("Merchant = 1, Hospital = 2, Training = 3, Elsewhere = 4. What next: ")
-	  
+
 ###########################################################################################################################################
 def FirstPlanet():
 	FactionAndClass(player)
 	path = Beginning(player)
-	while path != '5':
-		if path == '1':
+	#** Broken by cousin just entering a number higher than whatever the range was.
+	#** Don't make it path!=5, because otherwise it will just do that and crashes when the ship isn't defined
+	while path != 5:
+		if path == 1:
 			FindMentor1(player)
-		if path == '2':
+		if path == 2:
 			ExploreWilds1(player)
-		if path == '3':
+		if path == 3:
 			EnterCantina1(player)
-		if path == '4':
+		if path == 4:
 			ExploreTown1(player)
-		path = raw_input("What next? Remember, Mentor(1), Wilds(2), Cantina(3), Town(4), Done(5)")
+		#** Explore town prints the following line
+		path = getPlayerChoice(1,4,"What next? Remember, Mentor(1), Wilds(2), Cantina(3), Town(4), Done(5)")
 	if player.ship == 'true':
 		print "You may now leave Korriban."
 		print "If you're done here, you may leave for Dromund Kaas."
@@ -937,7 +955,7 @@ def KaasPort(player):
 					print "The cranky old nurse slowly heals you back to full health, then shoos you away"
 			except:
 				print "You did not enter a number."
-			
+
 def KaasWilds(player):
 	minleft = 50
 	for steps in range(50):
@@ -1331,7 +1349,7 @@ He then gives you the choice of strength in the Force, increased health, or incr
 	print "...."
 	print "An enraged howl echoed though Kaas City that day."
 	raw_input("Enter any key to continue: ")
-		
+
 def ChasingGhosts(player):
 	print "Your search leads you through Kaas City, through it's underbelly and glittering spires."
 	print "You track down leads, hunt through Archives, and shake down anyone who might know how to translate that map."
@@ -1721,7 +1739,7 @@ def MandolorianClans(player):
 	player.AddForcePoints(lightside=70,darkside=20,neutral=10)
 	player.EarnCredits(5000)
 	raw_input("Enter any key to continue: ")
-	
+
 def Ruins(player):
 	print "You arrive at an abandoned space station."
 	print "Ugh. Space suits always chafe."
@@ -1787,7 +1805,7 @@ def Ruins(player):
 	print "You sit down, really wishing you hadn't played hooky so much dring your math classes."
 	print "After a few hours of mental torment, you finally have a destination."
 	raw_input("Enter any key to set out: ")
-	
+
 def Holocron(player):
 	print "You head to the crash site, grimacing."
 	print "What an ignomious way to die for a rather brilliant Sith lord."
@@ -1836,7 +1854,7 @@ def Planet3B(player):
 	MandolorianClans(player)
 	Ruins(player)
 	Holocron(player)
- 
+
 def GettingEntrance(player):
 	if player.classname == 'Marauder':
 		print "You sweep past the guards, striding towards the heart of the facility."
@@ -1912,7 +1930,7 @@ def ImperialSecrets(player):
 	print '"It is only going to get worse," the Togruta murmurs, her expression guarded.'
 	print '"I can handle it," you reply confidently.'
 	print "That doeesn't chane the fact that you're prepared for the hardest fight of your life."
-					
+
 def Planet4(player):
 	GettingEntrance(player)
 	ImperialSecrets(player)
@@ -2001,7 +2019,7 @@ as you grab it. You nod your thanks and take off towards the plaza, the center o
 		raw_input("Enter any key to continue: ")
 	print "You near the entrance of the plaza, and stop to take a breath."
 	player.health = player.maxhealth
-	
+
 def FinalBattle(player):
 	print "You sprint into Kaas Square. The town is abandoned, lightning raging around as the Force screams around the former bastion of Sith glory."
 	print "The Sith Sanctum is shrouded in darkness, the Force Storms generated by the two Darths blocking out the sun completely."
@@ -2225,12 +2243,12 @@ def FinalBattle(player):
 		print "You feel the Dark Side of the Force strengthen and it almost feels... pleased."
 		print "The Empire is now under the Rule of Empress Acina and Dark Lord {}".format(player.name)
 		print "The Dark always wins."
-	
+
 def Planet5(player):
 	ConfrontingImperius(player)
 	UndeadArmy(player)
 	FinalBattle(player)
-					
+
 def main():
 	FirstPlanet()
 	print "Moving on, you level up!"
