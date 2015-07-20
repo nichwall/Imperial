@@ -5,6 +5,9 @@ print 'START GAME'
 name = raw_input('Character name: ')
 print "Hello, {}. Welcome to the Empire.".format(name)
 
+##########################################################################################################################################################
+#Classes
+
 # Weapons! Can be extended to be used on ships or something. Either way, makes it a lot easier to add additional
 # weapons to the game.
 class Weapon:
@@ -89,16 +92,25 @@ class Planet:
 
 ##########################################################################################################################################################
 
+def healPlayer():
+	pass
+
 def getPlayerChoice(low, high, dispMessage):
 	choice = -100000
 	while (choice < low) or (choice > high):
 		inp = raw_input(dispMessage)
+		# Check if it's a number in order to select one of the options
 		if (inp.isdigit()):
 			choice = eval(inp)
+		# Check if the player is trying to heal
+		if (inp.lower() == "heal"):
+			#print "Attempting to call healPlayer"
+			#healPlayer()
+			HealChoice()
 	return choice
 
 ##########################################################################################################################################################
-def FactionAndClass(player):
+def FactionAndClass():
 	player.faction = 'Empire'
 	print "(1) Sith Marauder: medium DPS, medium health"
 	print "(2) Sith Assassin: high DPS, low health"
@@ -121,7 +133,6 @@ def FactionAndClass(player):
 		player.damage += 45
 		player.maxhealth = 265
 	player.classtype = classtype
-	return player
 
 def PrintHoloEntry(order):
 	for entry in order:
@@ -174,7 +185,7 @@ old ways of the Sith. As a staunch traditionalist, her rise to power threatens I
 		elif entry == '15':
 			print """RAXUS PRIME....."""
 
-def HealChoice(player):
+def HealChoice():
 	healchoice = raw_input("Enter 1 to heal: ")
 	if healchoice == '1':
 		if player.medpacs > 0:
@@ -189,7 +200,7 @@ def HealChoice(player):
 		return
 	print "You chose not to heal."
 
-def AnimalAttack(player):
+def AnimalAttack():
 	print "A wild animal! It attacks!"
 	animalattack = 10
 	animalhealth = math.floor(70 * random.random())
@@ -221,7 +232,7 @@ def AnimalAttack(player):
 	player.credit += 100
 	print "You have {} credits.".format(player.credit)
 
-def CreatureAttack(player, creature):
+def CreatureAttack(creature):
 	print "The {} attacks!".format(creature.name)
 	while creature.health > 0:
 		print "You attack first!"
@@ -253,9 +264,9 @@ def CreatureAttack(player, creature):
 				print "GAME OVER"
 				exit()
 			print "The tarentatek attacks you for {} damage, leaving you with {} health.".format(creature.attack, player.health)
-		HealChoice(player)
+		HealChoice()
 
-def MercBandAttack(player, amount, affiliation):
+def MercBandAttack(amount, affiliation):
 	for merc in range(amount):
 		thealth = math.floor(random.random * 100)
 		while thealth > 0:
@@ -278,7 +289,7 @@ def MercBandAttack(player, amount, affiliation):
 			if thealth < 0:
 				thealth = 0
 				print "It's dead."
-				HealChoice(player)
+				HealChoice()
 			else:
 				tattack = random.random() * 75
 				player.health -= tattack
@@ -288,9 +299,9 @@ def MercBandAttack(player, amount, affiliation):
 					print "GAME OVER"
 					exit()
 				print "The {} attacks you for {} damage, leaving you with {} health.".format(affiliation,tattack, player.health)
-			HealChoice(player)
+			HealChoice()
 			
-def SithFight(player, enemyname, amountenemies, enemyhealth):
+def SithFight(enemyname, amountenemies, enemyhealth):
 	for enemy in range(amountenemies):
 		ehealth = math.floor(enemyhealth * random.random())
 		while ehealth > 0:
@@ -350,10 +361,10 @@ def SithFight(player, enemyname, amountenemies, enemyhealth):
 						print "GAME OVER"
 						exit()
 					print "{} attacks you for {} damage, leaving you with {} health.".format(enemyname, eattack, player.health)
-			HealChoice(player)
+			HealChoice()
 
 #############################################################################################################################################################
-def KorribanTomb(player):
+def KorribanTomb():
 	print """You enter the tomb cautiously. As you do, something stirs in your gut. Hmm.
 This place is filled with darkness. Do you embrace it?"""
 	print "Choose your side(You can change later):"
@@ -378,24 +389,24 @@ You come to a fork in the road. 3 tunnels gape in front of you."""
 	if pick == 1:
 		print "You head down the left tunnel."
 		print "Three shyracks attack you!"
-		AnimalAttack(player)
-		HealChoice(player)
-		AnimalAttack(player)
-		HealChoice(player)
-		AnimalAttack(player)
-		HealChoice(player)
+		AnimalAttack()
+		HealChoice()
+		AnimalAttack()
+		HealChoice()
+		AnimalAttack()
+		HealChoice()
 		print "Ugh. If you never see another Shyrack it'll be too soon."
 		print "..."
 		print "Darn."
 		print "Another shyrack flies out."
-		AnimalAttack(player)
+		AnimalAttack()
 		print
-		HealChoice(player)
+		HealChoice()
 		print """They seem to get fiercer as you battle your way down the twisting tunnel, lit by residual Force Energy.
 They might be protecting something. Or course, the Dark Side in the tomb could have made them stronger and fiercer.
 You wonder if it could do the same for you. The tomb's power is... alluring."""
 		print "Stop to soak up the dark side?"
-		yaynay = int(raw_input("1 for Yes, 2 for No: "))
+		yaynay = getPlayerChoice(1,2,"1 for Yes, 2 for No: ")
 		if yaynay == 2:
 			player.AddForcePoints(lightside=0,darkside=30,neutral=10)
 		else:
@@ -405,7 +416,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 		print "There. A moldering crypt lies before you."
 		print "Loot the crypt?"
 		#** ERROR ON 3
-		loot = int(raw_input("1 for looting, 2 for leaving, and 3 to continue looking around: "))
+		loot = getPlayerChoice(1,3,"1 for looting, 2 for leaving, and 3 to continue looking around: ")
 		if loot == 1:
 			print "Naughty, naughty."
 			player.AddForcePoints(lightside=0,darkside=20,neutral=10)
@@ -417,9 +428,9 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 			print "An animalistic screech echos out."
 			print "..."
 			print "A terentatek."
-			run = int(raw_input("1 to RUN, 2 to FIGHT: "))
+			run = getPlayerChoice(1,2,"1 to RUN, 2 to FIGHT: ")
 			if run == 2:
-				CreatureAttack(player,Creature(name="Tarentatek",health=250,baseAtk=55))
+				CreatureAttack(Creature(name="Tarentatek",health=250,baseAtk=55))
 				print "You won..."
 				print "You pry a blade from the harness on the beast."
 				print "The shoto is a good match for the blade you got from the tomb."
@@ -432,19 +443,19 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 			countright = 0
 			countwrong = 0
 			print '"What is the reward of power?"'
-			ans1 = int(raw_input("1: Victory; 2: Power is its own reward; 3: Respect; 4: Influence "))
+			ans1 = getPlayerChoice(1,4,"1: Victory; 2: Power is its own reward; 3: Respect; 4: Influence ")
 			if ans1 == 1:
 				countright = 1
 			else:
 				countwrong = 1
 			print '''"What is the Jedi's greatest weakness?"'''
-			ans2 = int(raw_input("1: Compassion; 2: The Republic; 3: Detachment; 4: The Light "))
+			ans2 = getPlayerChoice(1,4,"1: Compassion; 2: The Republic; 3: Detachment; 4: The Light ")
 			if ans2 == 3:
 				countright = countright + 1
 			else:
 				countwrong = countwrong + 1
 			print '"What is Death?"'
-			ans3 = int(raw_input("1: Failure; 2: Yourself; 3: The cessation of a heartbeat; 4: Weakness "))
+			ans3 = getPlayerChoice(1,4,"1: Failure; 2: Yourself; 3: The cessation of a heartbeat; 4: Weakness ")
 			if ans3 == 1:
 				countright = countright + 1
 			else:
@@ -453,7 +464,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 				print "The ghost turns and gestures at a gate hidden in shadows, and then moves to block your way out"
 				print "He laughs, eager to see you die fighting his... Tarentatek."
 				print "Your day just keeps getting better and better."
-				CreatureAttack(player,Creature(name="Tarentatek",health=250,baseAtk=55))
+				CreatureAttack(Creature(name="Tarentatek",health=250,baseAtk=55))
 				print "You won..."
 				print "You pry a blade from the harness on the beast."
 				print "A red shoto-- an offhand weapon used in tandem with another blade."
@@ -463,7 +474,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 				print "Lord Dartian looks genuinely surprised."
 				print '"Here: A saberstaff. I have no need of it."'
 				player.damage += 65
-				repent = int(raw_input("Do you want to try and redeem the ghost? 1: YES 2: NO "))
+				repent = getPlayerChoice(1,2,"Do you want to try and redeem the ghost? 1: YES 2: NO ")
 				if repent == 1:
 					if player.lightside > 39:
 						print "Dartian nods. He agrees with you."
@@ -485,7 +496,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 		atta = raw_input("Enter 1 to attack the tuk'ata, and any other key to continue: ")
 		if atta == '1':
 			#TukataAttack(player)
-			CreatureAttack(player,Creature(name="Tukata",health=150,baseAtk=75))
+			CreatureAttack(Creature(name="Tukata",health=150,baseAtk=75))
 			player.AddForcePoints(lightside=0,darkside=30,neutral=10)
 		else:
 			print "As you get closer, it looks different from any tuk'ata you've seen."
@@ -560,21 +571,21 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 			if luck > 98:
 				print "Well fierfek."
 				print "A shabla terentatek."
-				CreatureAttack(player,Creature(name="Tarentatek",health=250,baseAtk=55))
+				CreatureAttack(Creature(name="Tarentatek",health=250,baseAtk=55))
 			elif luck < 98 and luck > 94:
 				print "A tuk'ata? This day just keeps getting better and better."
-				CreatureAttack(player,Creature(name="Tukata",health=250,baseAtk=55))
+				CreatureAttack(Creature(name="Tukata",health=250,baseAtk=55))
 			elif luck < 94 and luck > 70:
 				print "Nothing. At this point, you're kind of relieved."
 				print "There's plenty more tunnels, though."
 			elif luck < 70 and luck > 50:
 				print "A bunch of shyracks squawk angrily."
-				AnimalAttack(player)
-				HealChoice(player)
-				AnimalAttack(player)
-				HealChoice(player)
-				AnimalAttack(player)
-				HealChoice(player)
+				AnimalAttack()
+				HealChoice()
+				AnimalAttack()
+				HealChoice()
+				AnimalAttack()
+				HealChoice()
 			elif luck < 50 and luck > 20:
 				print "You found a stash of medpacs!"
 				player.medpacks += 7
@@ -585,7 +596,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 			explore = raw_input("Enter 1 to keep exploring: ")
 		print "You continue on towards the Force Nexus."
 		print "A group of Sith Ghosts waits for you, and they don't look too happy."
-		SithFight(player, 'Sith Ghost', 3, 150)
+		SithFight('Sith Ghost', 3, 150)
 		print "You look around the chamber."
 		crypt = raw_input("Enter 1 to enter the crypt, or 2 to look around the chamber: ")
 		while crypt == '2':
@@ -595,7 +606,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 				player.EarnCredits(math.floor(1250 * random.random()))
 			elif loot < 80 and loot > 70:
 				print "Oh look, a shyrack."
-				AnimalAttack(player)
+				AnimalAttack()
 			elif loot < 70 and loot > 35:
 				print "You found a small stash of credits!"
 				player.EarnCredits(math.floor(random.random() * 70))
@@ -621,7 +632,7 @@ You wonder if it could do the same for you. The tomb's power is... alluring."""
 		print "Fekking tomb robbers."
 		print "You aren't getting paid for this type of osik."
 
-def Beginning(player):
+def Beginning():
 	print """{}, you have been chosen to defend the {} using your skills as a {}.
 You have {} credits to your name, and no weapons. How you go from here is up to you.
 You may want to find a mentor in the nearby village, or test your skills in the nearby wilds.
@@ -634,7 +645,7 @@ You could find a friend, or you may find some information that could be useful."
 	path = getPlayerChoice(1,4,"Which way do you go? ")
 	return path
 
-def FindMentor1(player):
+def FindMentor1():
 	print "You chose to find a mentor!"
 	print "You wander around town, looking for someone who knows a thing or two about the ongoing wars."
 	print "Dreshdae is a horrid place, but you have little choice. This is where possible Sith must come to prove themselves."
@@ -650,7 +661,7 @@ def FindMentor1(player):
 	raw_input("Enter any key to continue: ")
 	print "Oh look, it seems the Acolytes decided to attack you."
 	print "..... What a surprise."
-	SithFight(player, 'Acoloyte', 4, 70)
+	SithFight('Acoloyte', 4, 70)
 	print "You collect the credits from their bodies."
 	player.EarnCredits(math.floor(random.random() * 5000))
 	raw_input("Enter any key to continue: ")
@@ -661,7 +672,7 @@ def FindMentor1(player):
 	print "You keep looking around, but the Sith Masters are all out fighting the Republic."
 	print "You head back to town, dissapointed."
 
-def ExploreWilds1(player):
+def ExploreWilds1():
 	print "You head off to the wilds."
 	planet = 'Korriban'
 	description = """Pretty sure you're in Hell right now. Dry sand scrapes against your skin, and a tuk'ata howls somewhere in the distance.
@@ -681,7 +692,7 @@ You can see a massive building in the distance."""
 				print "You found a couple credits. Nice."
 				player.EarnCredits(2)
 			if luck < 70 and luck > 40:
-				AnimalAttack(player)
+				AnimalAttack()
 		choice = raw_input("1 to move on, 2 to keep exploring: ")
 	print "Who knew {} could be so big?".format(planet)
 	print
@@ -690,9 +701,9 @@ You can see a massive building in the distance."""
 	print "..."
 	print
 	print "Finally, you arrive."
-	KorribanTomb(player)
+	KorribanTomb()
 
-def EnterCantina1(player):
+def EnterCantina1():
 	print "A drink sounds good right now."
 	print "Imperial propaganda blares from the speakers."
 	print """It's got a rather catchy tune, and you start humming, "Bum Bum bum dum da dum dum da dum....."""""
@@ -711,7 +722,7 @@ def EnterCantina1(player):
 		print "You barely make it out of the Cantina, before a voice slashes through the air"
 		print '"Get them!"'
 		print "Your day is just fantastic so far."
-		SithFight(player, 'Darth Imperius', 1, 1500)
+		SithFight('Darth Imperius', 1, 1500)
 		print "You stand over the Twi'lek's body, shocked."
 		print "GAME OVER"
 		print
@@ -738,9 +749,6 @@ def EnterCantina1(player):
 		print "While your search for the Sith facilty must be last, do you want to search for the Holocron or the Blade, first?"
 		search = raw_input("Enter 1 for the Blade or 2 for the Holocron: ")
 		if search == '1':
-			player.priorityone = 'Blade of Ragnos'
-			player.prioritytwo = 'Holocron of Adega'
-		elif search == '2':
 			player.priorityone = 'Holocron of Adega'
 			player.prioritytwo = 'Blade of Ragnos'
 		else:
@@ -753,7 +761,7 @@ def EnterCantina1(player):
 		player.ship = 'true'
 			
 ############################################################################################################################################    
-def ExploreTown1(player):
+def ExploreTown1():
 	print "Hmm. The markets, the hospital or the training arena?"
 	choose = raw_input("1 for the markets, 2 for the hospital, 3 for the training arena or 4 to go somewhere else: ")
 	while choose != '4':
@@ -832,7 +840,7 @@ def ExploreTown1(player):
 				number = raw_input("Enter the number of enemies you wish to fight: ")
 				hp = raw_input("Enter the health for each enemy: ")
 				try:
-					SithFight(player, 'Training Dummy', int(number), int(hp))
+					SithFight('Training Dummy', int(number), int(hp))
 					HealChoice(player)
 					print "You gain 30 LS points, 30 DS points, and 30 NS points."
 					player.AddForcePoints(lightside=30,darkside=30,neutral=30)
@@ -844,19 +852,19 @@ def ExploreTown1(player):
 
 ###########################################################################################################################################
 def FirstPlanet():
-	FactionAndClass(player)
-	path = Beginning(player)
+	FactionAndClass()
+	path = Beginning()
 	#** Broken by cousin just entering a number higher than whatever the range was.
 	#** Don't make it path!=5, because otherwise it will just do that and crashes when the ship isn't defined
 	while path != 5:
 		if path == 1:
-			FindMentor1(player)
+			FindMentor1()
 		if path == 2:
-			ExploreWilds1(player)
+			ExploreWilds1()
 		if path == 3:
-			EnterCantina1(player)
+			EnterCantina1()
 		if path == 4:
-			ExploreTown1(player)
+			ExploreTown1()
 		#** Explore town prints the following line
 		path = getPlayerChoice(1,4,"What next? Remember, Mentor(1), Wilds(2), Cantina(3), Town(4), Done(5)")
 	if player.ship == 'true':
@@ -880,20 +888,20 @@ def FirstPlanet():
 			path = raw_input("What next? Remember, Mentor(1), Wilds(2), Cantina(3), Town(4), Done(5)")
 			while path != '5':
 				if path == '1':
-					FindMentor1(player)
+					FindMentor1()
 				if path == '2':
-					ExploreWilds1(player)
+					ExploreWilds1()
 				if path == '3':
-					EnterCantina1(player)
+					EnterCantina1()
 				if path == '4':
-					ExploreTown1(player)
+					ExploreTown1()
 				path = raw_input("What next? Remember, Mentor(1), Wilds(2), Cantina(3), Town(4), Done(5)")
 	else:
 		print "You'll need access to a ship to leave Korriban."
 ################################################################################################################################        
 
 
-def KaasPort(player):
+def KaasPort():
 	print "The markets, the hospital?"
 	choose = raw_input("1 for the shop, 2 for the clinic, or 3 to continue to Kaas City: ")
 	while choose != '3':
@@ -956,7 +964,7 @@ def KaasPort(player):
 			except:
 				print "You did not enter a number."
 
-def KaasWilds(player):
+def KaasWilds():
 	minleft = 50
 	for steps in range(50):
 		print "You're {} minutes away from Kaas City.".format(minleft)
@@ -966,15 +974,15 @@ def KaasWilds(player):
 			print "You find a cave, and your curiosity gets the better of you."
 			print 'Too late, you remember the saying, "Curiosity killed the nexu."'
 			print "The Terentatek you disturbed attacks you."
-			CreatureAttack(player,Creature(name="Tarentatek",health=250,baseAtk=55))
+			CreatureAttack(Creature(name="Tarentatek",health=250,baseAtk=55))
 		elif encounter > 60 and encounter < 98:
 			print "One of the many animals in Dromund Kaas's wilds decided you would be a good dinner."
-			AnimalAttack(player)
+			AnimalAttack()
 		elif encounter > 40 and encounter < 60:
 			print "A few Sith decide you're a good way to pass the time."
 			print "Naturally, you're against the idea."
 			print "Crispy deep lightning-fried {} is not the way to go.".format(player.name)
-			SithFight(player, 'Sith', 3, 110)
+			SithFight('Sith', 3, 110)
 		elif encounter > 25 and encounter < 40:
 			print "You found a stash of holocrons!"
 			player.AddForcePoints(lightside=10,darkside=10,neutral=10)
@@ -988,7 +996,7 @@ def KaasWilds(player):
 			print "You found a massive stash of credits!"
 			player.credit += math.floor(random.random() * 5000)
 ################################################################################
-def KaasCity(player):
+def KaasCity():
 	print "You finally reach Kaas City."
 	print "The city has instituted a clinic at the entrance to the city."
 	print "You're now fully healed!"
@@ -1059,7 +1067,7 @@ your actions reflect on Darth Imperius. You must be careful."'''
 		print '"Imperius will die," they state, "So join us-- or die."'
 		print '"How cliche," you mutter.'
 		print "They attack, tired of talking."
-		SithFight(player, 'Sith Apprentice', 3, 120)
+		SithFight('Sith Apprentice', 3, 120)
 	raw_input("Enter any key to continue: ")
 	print "You sigh, and step over their bodies."
 	print '''........
@@ -1181,7 +1189,7 @@ def KaasTemple(player):
 	print "The temple gives off a dull gleam, almost purple in the neverending twilight of Dromund Kaas."
 	print "The ruins dotting the courtyard are magnificent-- the evil radiating from this place does little to mask their former glory."
 	print "The maddened researchers though, might, and you decide that the Empire has no business in archeology."
-	SithFight(player, 'Crazy Researcher', 7, 120)
+	SithFight('Crazy Researcher', 7, 120)
 	print "Ugh."
 	raw_input("Enter any key to continue into the temple: ")
 	print "You cautiously enter into the cavernous temple, an eiree green glow permeating the massive spaces within."
@@ -1190,9 +1198,9 @@ def KaasTemple(player):
 	raw_input("Enter any key to creep around the first corner: ")
 	print "The source of some of the animalistic wails stares at you."
 	print "One of the maddened Sith Imperius warned you about bares its teeth."
-	SithFight(player, 'Maddened Sith Lord', 1, 450)
+	SithFight('Maddened Sith Lord', 1, 450)
 	print "Some of the, well, zombies amble towards you, alerted by the sound of your fight."
-	SithFight(player, 'Crazed Research Team Members', 7, 120)
+	SithFight('Crazed Research Team Members', 7, 120)
 	print "You attempt to wipe the guts off your pants, but really only succeed in smearing it more."
 	print "Fierfek, what a brilliant day."
 	print "There's five tombs on your map, and unfortunately, you have no idea which is which."
@@ -1221,11 +1229,11 @@ def KaasTemple(player):
 			print "You hate cults with a burning passion, having lost your father to one."
 			print "The Dark Side oils within you as rage ignites, turning your heart into a furnace."
 			print "A few guards seee you coming and attack."
-			SithFight(player, 'Cult Guard', 3, 180)
+			SithFight('Cult Guard', 3, 180)
 			raw_input("Enter any key to continue into the cult's tomb: ")
 			print "Shrines to a long dead Sith dot the halls."
 			print "The screaming of the guards must have awakened the rest of the cult to your presence, and several stand in your way, blocking the path to the central chamber."
-			SithFight(player, 'Cult Member', 15, 350)
+			SithFight('Cult Member', 15, 350)
 			print "You head into the central chamber."
 			raw_input("Enter any key to continue: ")
 			print "You strike down the guards, and stalk towards the Sith in the center."
@@ -1235,7 +1243,7 @@ def KaasTemple(player):
 
 You hiss at him, but before you can say anything, the Sith leaps at you, suddenly full of rage. "You killed my children!"'''
 			print "You briefly reflect you didn't exactly have this on your agenda for the day before parrying away the first swipe."
-			SithFight(player, "Cult Leader", 1, 950)
+			SithFight("Cult Leader", 1, 950)
 			print "You stalk back out, having finished off the cult."
 			print "You halt at the entrance to the tomb, and turn back."
 			print '''"That was for my father, hut'tuune."'''
@@ -1248,7 +1256,7 @@ You hiss at him, but before you can say anything, the Sith leaps at you, suddenl
 			print "You were right, unfortunately."
 			print "Hordes of Sithspawn meander about in the crypt."
 			print "Frakking alchemist."
-			SithFight(player, "Tuk'ata Sithspawn", 4, 300)
+			SithFight("Tuk'ata Sithspawn", 4, 300)
 			print "You griamce, some unidentifiable fluid and blood and..... motor oil on your clothes."
 			print "You sniff at it, immediately wishing you hadn't."
 			print "But yes, that is indeed motor oil."
@@ -1303,13 +1311,13 @@ I may join them."
 "I can ask nothing less," the ghost says.
 
 He then gives you the choice of strength in the Force, increased health, or increased fighting prowess."'''
-			choice = raw_input("(1)Force Points, (2)Health, (3)Damage: ")
-			if choice == '1':
+			choice = getPlayerChoice(1,3,"(1)Force Points, (2)Health, (3)Damage: ")
+			if choice == 1:
 				player.AddForcePoints(lightside=100,darkside=100,neutral=100)
-			elif choice == '2':
+			elif choice == 2:
 				player.maxhealth += 50
 				player.health = player.maxhealth
-			elif choice == '3':
+			elif choice == 3:
 				player.damage += 50
 		elif order == '5':
 			print "You stalk into the tomb, blade at the ready."
@@ -1322,16 +1330,16 @@ He then gives you the choice of strength in the Force, increased health, or incr
 					else:
 						player.health -= 20
 						print "You take 20 damage."
-						HealChoice(player)
+						HealChoice()
 				elif luck < .75 and luck > .5:
 					print "A dwarf shyrack dive bombs you, then flies away in a hurry."
 					print "Your footsteps must have disturbed it."
 					print "The only damage you take is to your dignity, which you feel has been rather questionable of late."
 				elif luck < .5 and luck > .2:
 					print "You're attacked by a bunch of overlarge spiders."
-					AnimalAttack(player)
-					AnimalAttack(player)
-					AnimalAttack(player)
+					AnimalAttack()
+					AnimalAttack()
+					AnimalAttack()
 				else:
 					print "You creep along and water falls on your face."
 					print "It must be raining again outside."
@@ -1339,7 +1347,7 @@ He then gives you the choice of strength in the Force, increased health, or incr
 			print "You head into the central chamber, and snag the Holocron."
 			print "However, it triggers a trap."
 			print "A terentatek lurches out of the dank tomb corridors."
-			SithFight(player, "Terentatek Mauler", 1, 1700)
+			SithFight("Terentatek Mauler", 1, 1700)
 			print "You clean off your blade, and head out, holocron in hand."
 	print "You sigh, stepping out of the tomb."
 	print "You shake off the ghosts, and prepare to tread back to Kaas City."
@@ -1350,7 +1358,7 @@ He then gives you the choice of strength in the Force, increased health, or incr
 	print "An enraged howl echoed though Kaas City that day."
 	raw_input("Enter any key to continue: ")
 
-def ChasingGhosts(player):
+def ChasingGhosts():
 	print "Your search leads you through Kaas City, through it's underbelly and glittering spires."
 	print "You track down leads, hunt through Archives, and shake down anyone who might know how to translate that map."
 	print "Eventually, this leads you to the estates of Lord Nazarra."
@@ -1393,7 +1401,7 @@ def ChasingGhosts(player):
 	else:
 		print "You'll have to do this the old fashioned way."
 		print "You unclip your saber from your belt."
-		SithFight(player, 'Guard', 2, 150)
+		SithFight('Guard', 2, 150)
 	print "You continue on into the compound."
 	check = raw_input("Enter 1 to check the high security vault first, and any other key to continue towards the archves: ")
 	if check == '1':
@@ -1415,7 +1423,7 @@ def ChasingGhosts(player):
 				keycode = raw_input("Enter the key code: ")
 		print "You grimace, slipping inside the vault."
 		print "Your heart sinks as a massive turret whirls to target you."
-		SithFight(player, 'Turret', 1, 400)
+		SithFight('Turret', 1, 400)
 		print "You stare at the wreckage, intruiged."
 		print "There better be some good loot here for a turret like that."
 		raw_input("Enter any key to continue on: ")
@@ -1425,10 +1433,10 @@ def ChasingGhosts(player):
 		print "Which do you take: the Jedi or Sith Holocron?"
 		take = raw_input("(1)Sith or (2)Jedi: ")
 		if take == '1':
-			LDNpoints(player, 100, 0, 0)
+			LDNpoints(100, 0, 0)
 			print "You snatch the blue fractal-patterns device."
 		elif take == '2':
-			LDNpoints(player, 0, 100, 0)
+			LDNpoints(0, 100, 0)
 			print "You snatch the red pyramid."
 	print "You continue slipping through the fortress."
 	print "You execute or Mind-trick guards, sneaking through without opposition."
@@ -1449,7 +1457,7 @@ def ChasingGhosts(player):
 	print "Lightning crackles from his fingers."
 	print "You receive 30 damage!"
 	player.health -= 30
-	SithFight(player, 'Lord Nazarra', 1, 750)
+	SithFight('Lord Nazarra', 1, 750)
 	print "You grab the holocron from the Sith corpse."
 	print "It's time to return to Imperius."
 	print "You make sure to pillage the di'kut's Archives for some Jedi and Sith holocrons."
@@ -1462,7 +1470,7 @@ def ChasingGhosts(player):
 	print "You're heading to find the {}, and then the {}.".format(player.priorityone, player.prioritytwo)
 
 ##########################################################################################                    
-def SecondPlanet(player):
+def SecondPlanet():
 	print
 	print "You, {}, look around as the {} enters realspace.".format(player.name, player.shipname)
 	print "Flashes of lightning flicker across the planets surface."
@@ -1473,14 +1481,14 @@ def SecondPlanet(player):
 	print "However, you may stock up at the spaceport Hospital and Shops."
 	spaceport = raw_input("Enter 1 to stick around the airport: ")
 	if spaceport == '1':
-		KaasPort(player)
-	KaasWilds(player)
-	KaasCity(player)
-	KaasTemple(player)
-	ChasingGhosts(player)
+		KaasPort()
+	KaasWilds()
+	KaasCity()
+	KaasTemple()
+	ChasingGhosts()
 ###############################################################
 
-def LostTemple(player):
+def LostTemple():
 	print "A frozen tundra awaits you."
 	print "........"
 	print "You go to the *best* places."
@@ -1498,7 +1506,7 @@ def LostTemple(player):
 		print "You curse your inability for subterfuge and blinding speed."
 		print "The Sithspawn roars, and you ready your blade for the fight."
 		raw_input("Enter any key to continue: ")
-		SithFight(player, 'Karshaa-wyrm Sithspawn', 1, 2275)
+		SithFight('Karshaa-wyrm Sithspawn', 1, 2275)
 	print "You stalk into the cave."
 	print "Set into the back of the cave is a doorway flanked by etheral red torches."
 	print "...."
@@ -1537,29 +1545,29 @@ on the Force and their 'victories'.'''
 	print "The blue glow of the holocron lights up the grin on your face."
 	print "You exit the cave, heading into the Valley."
 
-def ValleyOfTheDead(player):
+def ValleyOfTheDead():
 	for steps in range(40):
 		print "You've walked for {} minutes out of the 40 minute Valley hike.".format(steps)
 		hahasucker = math.floor(random.random() * 100)
 		if hahasucker > 90:
 			print "A horde of Sithspawn lies in front of you."
-			SithFight(player, 'Sithspawn', 7, 240)
+			SithFight('Sithspawn', 7, 240)
 		elif hahasucker > 60 and hahasucker < 90:
 			print "One of the many animals in Ziost's Valley attacks, driven mad by the Dark Side imbuing the planet."
-			AnimalAttack(player)
+			AnimalAttack()
 		elif hahasucker > 40 and hahasucker < 60:
 			print "A few anceint war-droids attack you for trespassing on ancient lands."
-			SithFight(player, 'Ancient War-Droid', 3, 110)
+			SithFight('Ancient War-Droid', 3, 110)
 		elif hahasucker > 25 and hahasucker < 40:
 			print "You travel on, unbothered."
 		elif hahasucker > 15 and hahasucker < 25:
 			print "Dead Sith warriors from ages past, resurrected by the Dark energy of the Valley, attack."
-			SithFight(player, 'Sith Zombie', 5, 295)
+			SithFight('Sith Zombie', 5, 295)
 		elif hahasucker > 5 and hahasucker < 15:
 			print "A minefield lies in front of you."
 			print "You may sneak around(1), Force jump and speed your way acoss(2), or use the Force to shake off the damage(3)."
-			action = raw_input("Enter the number of your chosen action: ")
-			if action == '1':
+			action = getPlayerChoice(1,3,"Enter the number of your chosen action: ")
+			if action == 1:
 				if player.classname == 'Assassin':
 					print "You successfully sneak around!"
 				elif player.classname == 'Marauder':
@@ -1574,7 +1582,7 @@ def ValleyOfTheDead(player):
 					print "Juggernauts are in no way meant for sneaking."
 					player.health -= 40
 					print "You lost 40 health to the minefield."
-			elif action == '2':
+			elif action == 2:
 				if player.classname == 'Marauder':
 					print "You successfully leap around the minefield!"
 				elif player.classname == 'Assassin':
@@ -1609,9 +1617,9 @@ def ValleyOfTheDead(player):
 					print "You lost 30 health to the minefield."
 		else:
 			print "A Sithspawn, once a rancor, storms out of its cave, and attacks."
-			SithFight(player, 'Sithspawn Rancor', 1, 1750)
+			SithFight('Sithspawn Rancor', 1, 1750)
 
-def AncientArchives(player):
+def AncientArchives():
 	print "You cautiously stride into the ancient Temple."
 	print "You sneak through the halls till you enter the ancient archive. A holocron glows in the center."
 	print "The Holocron is the control panel, and you grimace."
@@ -1656,12 +1664,12 @@ def AncientArchives(player):
 	return traps
 	print "You disable as many traps as you can, and continue on."
 
-def FindingTheBlade(traps, player):
+def FindingTheBlade(traps):
 	print "You stumble through the tomb."
 	print "When you reach the final halllway, you grimace, knowing most of the traps are here."
 	for item in traps:
 		print "You fell victim to {}!".format(item)
-		HealChoice(player)
+		HealChoice()
 		player.health -= 10
 		if player.health <= 0:
 			print "Sorry, but you were killed by the traps."
@@ -1675,21 +1683,21 @@ def FindingTheBlade(traps, player):
 	print "A Sithspawn Krayt."
 	print "You briefly consider demanding a raise plus even more hazard pay from Imperius."
 	raw_input("Enter any key to start the fight.")
-	SithFight(player, "Sithspawn Krayt", 1, 8000)
+	SithFight("Sithspawn Krayt", 1, 8000)
 	print "Having got past the defenses, you step into the central chamber."
 	print "You see a golden lightsaber hilt standing on the pedestal."
 	print "You step forward, and activate the red-violet blade."
 	print "You have found the Ancient Blade of Ragnos!"
 	print "You now continue on to the next planet."
 
-def Planet3A(player):
-	LostTemple(player)
-	ValleyOfTheDead(player)
-	traps = AncientArchives(player)
-	FindingTheBlade(player, traps)
+def Planet3A():
+	LostTemple()
+	ValleyOfTheDead()
+	traps = AncientArchives()
+	FindingTheBlade(traps)
 
 ##################################################################
-def MandolorianClans(player):
+def MandolorianClans():
 	print "After jumping throug political loopholes and finally gaining access to the ruins, you head out."
 	print "The ruins are surrounded by craters that have yet to be eroded by time."
 	print "The planet here is scarred and deformed by war."
@@ -1711,13 +1719,13 @@ def MandolorianClans(player):
 		player.EarnCredits(math.floor(random.random() * 1750))
 	else:
 		print "You bear down on them, sabers flashing."
-		SithFight(player, "Mando'ad", 2, 350)
+		SithFight("Mando'ad", 2, 350)
 	print "You continue through, making your way to the city's ancient defense systems."
 	print "A horde of Mando'ade have made this their home."
 	print "..."
 	print "Osik."
 	raw_input("Enter any key to begin the fight: ")
-	SithFight(player, "Mando'ad", 17, 550)
+	SithFight("Mando'ad", 17, 550)
 	print "You grimace."
 	print "17 to 1 is bad odds on a brilliant day."
 	print "Anyways. You were looking for that shab'la computer."
@@ -1733,14 +1741,14 @@ def MandolorianClans(player):
 	print '''"Worm, really? Is that the best you can come up with, mir'osik?" You blurt out before you can stop yourself.'''
 	print "You decide to blame it on the Dark side enrgies surrounding the ruins."
 	print "Lord Kyros draws a golden doublebladed 'saber, and attack!"
-	SithFight(player, 'Lord Kyros', 1, 1790)
+	SithFight('Lord Kyros', 1, 1790)
 	print "You stoop to grab the fallen datapad, marking the position of the ruins you'll need to go next."
 	print "You head out, cheerfully looting the tomb of its relics on the way out, including some Jedi Holocrons."
 	player.AddForcePoints(lightside=70,darkside=20,neutral=10)
 	player.EarnCredits(5000)
 	raw_input("Enter any key to continue: ")
 
-def Ruins(player):
+def Ruins():
 	print "You arrive at an abandoned space station."
 	print "Ugh. Space suits always chafe."
 	for steps in range(25):
@@ -1806,39 +1814,39 @@ def Ruins(player):
 	print "After a few hours of mental torment, you finally have a destination."
 	raw_input("Enter any key to set out: ")
 
-def Holocron(player):
+def Holocron():
 	print "You head to the crash site, grimacing."
 	print "What an ignomious way to die for a rather brilliant Sith lord."
 	print "You guess it's better than tripping on a rock and accidentally impaling yourlef, like old Darth Riika."
 	print "You make your way through the planet's wilds towards the crash site."
 	print "Darth Acina sent troops to find the holocron."
 	print "You may bribe them to leave if you have enough credits, promise to help Acina, or kill them to ensure Acina gets the message."
-	action = raw_input("(1)Bribe, (2)Ally, or (3)Kill: ")
-	if action == '1':
+	action = getPlayerChoice(1,3,"(1)Bribe, (2)Ally, or (3)Kill: ")
+	if action == 1:
 		if player.credit < 2500:
 			print "You don't have enough credits to bribe them."
 			print "Insulted that you would attempt to sway their loyalties with such a paltry sum, the troops attack you."
-			SithFight(player, "Acina Solder", 15, 1000)
+			SithFight("Acina Solder", 15, 1000)
 		else:
 			print "You manage to bribe them away, grimacing at your lighter money pouch."
-	elif action =='2':
+	elif action == 2:
 		player.AddForcePoints(darkside=150)
 		print "Treachery is the way of the Sith, and you are no different."
 		print "Acina promises power, and asks you to act as her own agent from within Imperius's operations."
 	else:
 		print "You attack the troops!"
 		player.AddForcePoints(lightside=30,neutral=40)
-		SithFight(player, "Acina Solder", 15, 1000)
+		SithFight("Acina Solder", 15, 1000)
 	print "After searching the wreckage, you unearth the Holocron."
 	print "It's a mix of a Jedi and Sith holocron, a blue pyramid, swirling Light and Dark in the Force."
 	print "You activate it cautiosly."
 	print "Adega appears, and offers you knowledge: good or evil."
-	force = raw_input("Enter 1 to gain the light side knowledge, 2 for dark, and 3 for neutral: ")
-	if force == '1':
+	force = getPlayerChoice(1,3,"Enter 1 to gain the light side knowledge, 2 for dark, and 3 for neutral: ")
+	if force == 1:
 		print "You choose the light side knowledge."
 		player.AddForcePoints(lightside=900)
 		print "There is no ignorance, there is knowledge."
-	elif force == '2':
+	elif force == 2:
 		print "You choose the Dark Side knowledge."
 		player.AddForcePoints(darkside=900)
 		print "Remember, knowledge is power, and power is victory."
@@ -1850,12 +1858,12 @@ def Holocron(player):
 	print "Time to head to Lola Sayu -- No rest for the wicked."
 	raw_input("Enter any key to leave Raxus Prime: ")
 
-def Planet3B(player):
-	MandolorianClans(player)
-	Ruins(player)
-	Holocron(player)
+def Planet3B():
+	MandolorianClans()
+	Ruins()
+	Holocron()
 
-def GettingEntrance(player):
+def GettingEntrance():
 	if player.classname == 'Marauder':
 		print "You sweep past the guards, striding towards the heart of the facility."
 		print "They hurry, yelling at you, but failing to keep up with the quick strides of a Marauder."
@@ -1882,7 +1890,7 @@ You enter the room given to you for your stay, staring out the window accross th
 		print '"Your security is lacking," you announce, a smirk playing accross your features.'
 		print "The officers scowl at each other, before remembering they are, in fact int eh presence of a Sith."
 		print "You're shown to your quarters, where you meditate, prepping for your next mission."
-def ImperialSecrets(player):
+def ImperialSecrets():
 	prisoners = ["Connrad Vern'ner", "Kayli Ishta", "Ravo Sorkin", "Garrus Zorah", "Tiberius Spock", "Jayms Kirrk", "Alle'son Errnhart", "Audrii Luuwis",
 				 "Ky'nesi Wintare", "Vertucci", "Isaa Swann", "Ton'ni Staark", "Captain Zeve Rog'gers", "Ashara Zavros", "Ely'saa Shuur",
 				 "Xander Velocin"]
@@ -1922,7 +1930,7 @@ def ImperialSecrets(player):
 				print "{} is killed by one of the guards.".format(p)
 				prisoners.remove(p)
 		print "There's {} guards left.".format(guards)
-		SithFight(player, "Citadel Guard", guards, 1000)
+		SithFight("Citadel Guard", guards, 1000)
 	print "After making your way through the fortress, you and Ashara flee in the {}.".format(player.shipname)
 	print "As you head to Dromund Kaas, Ashara grimaces."
 	print "You feel it too."
@@ -1931,11 +1939,11 @@ def ImperialSecrets(player):
 	print '"I can handle it," you reply confidently.'
 	print "That doeesn't chane the fact that you're prepared for the hardest fight of your life."
 
-def Planet4(player):
-	GettingEntrance(player)
-	ImperialSecrets(player)
+def Planet4():
+	GettingEntrance()
+	ImperialSecrets()
 
-def ConfrontingImperius(player):
+def ConfrontingImperius():
 	print '"Why?!?!" Your voice thunders through the Citadel. "I nearly got killed for these relics, and made an enemy of the Empire as well!"'
 	print '''Imperius raises a gloved hand, and you snap your jaw shut. The Twi'lek is still a formidable woman, even with the power
 you gained finding the Blade and holocron. "You met Darth Acina." Her voice rumbles with anger, her statement slicing through the air."
@@ -1966,7 +1974,7 @@ You nod, platitudes clearly unwelcome. "Her death gave you strength."
 
 The Sith nods, lost in thought. You wait a while more, and then turn to leave. This meeting is clearly over.'''
 
-def UndeadArmy(player):
+def UndeadArmy():
 	print "Outside of the citadel, away from Imperius' calm glacier-like Dark presence, the Force is a raging maelstrom."
 	print "Out of the corner of your eye, you think you see a blue shimmer, but when you turn there's nothing."
 	print "Shrugging you continue towards your apartment."
@@ -2010,17 +2018,17 @@ as you grab it. You nod your thanks and take off towards the plaza, the center o
 			else:
 				print "It claws at you through the Force, and you take 10 damage."
 				player.health -= 10
-				SithFight(player, "Ghost", 1, 1500)
+				SithFight("Ghost", 1, 1500)
 		elif luck < 40 and luck > 20:
 			print "You keep going without running into any more spectres."
 		else:
 			print "You sneak up on a ghost, attacking it from behind."
-			SithFight(player, "Unwary Ghost", 1, 1200)
+			SithFight("Unwary Ghost", 1, 1200)
 		raw_input("Enter any key to continue: ")
 	print "You near the entrance of the plaza, and stop to take a breath."
 	player.health = player.maxhealth
 
-def FinalBattle(player):
+def FinalBattle():
 	print "You sprint into Kaas Square. The town is abandoned, lightning raging around as the Force screams around the former bastion of Sith glory."
 	print "The Sith Sanctum is shrouded in darkness, the Force Storms generated by the two Darths blocking out the sun completely."
 	print "In the Square, you see two figures staring at each other across the plaza."
@@ -2134,7 +2142,7 @@ def FinalBattle(player):
 			print "She srikes for {} damage.".format(Imp)
 			AcinaHealth = AcinaHealth - Imp
 			print "Darth Acina now has {} health.".format(AcinaHealth)
-			HealChoice(player)
+			HealChoice()
 			print "Acina strikes out."
 			Acina = math.floor(random.random() * 200) + 100
 			print "You lose {} health.".format(Acina)
@@ -2143,7 +2151,7 @@ def FinalBattle(player):
 				print "You've been struck down by Acina."
 				print "GAME OVER"
 				quit()
-			HealChoice(player)
+			HealChoice()
 		print "The Light Side shivers in joy and relief as Acina breathes her last."
 		print "Imperius grins, slapping your shoulder good naturedly."
 		print "The Empire will enter a Golden Age with Empress Imperius at its helm."
@@ -2229,7 +2237,7 @@ def FinalBattle(player):
 			print "She srikes for {} damage.".format(Imp)
 			ImperiusHealth = ImperiusHealth - Imp
 			print "Darth Imperius now has {} health.".format(AcinaHealth)
-			HealChoice(player)
+			HealChoice()
 			print "Imperius strikes out."
 			Acina = math.floor(random.random() * 200) + 100
 			print "You lose {} health.".format(Acina)
@@ -2244,10 +2252,10 @@ def FinalBattle(player):
 		print "The Empire is now under the Rule of Empress Acina and Dark Lord {}".format(player.name)
 		print "The Dark always wins."
 
-def Planet5(player):
-	ConfrontingImperius(player)
-	UndeadArmy(player)
-	FinalBattle(player)
+def Planet5():
+	ConfrontingImperius()
+	UndeadArmy()
+	FinalBattle()
 
 def main():
 	FirstPlanet()
@@ -2255,27 +2263,27 @@ def main():
 	player.LevelUp(self, 50, 1500, 20, 50)
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	raw_input("Enter any key to continue: ")
-	SecondPlanet(player)
+	SecondPlanet()
 	print "Moving on, you level up!"
 	player.LevelUp(self, 50, 1500, 20, 50)
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	raw_input("Enter any key to continue: ")
-	Planet3A(player)
+	Planet3A()
 	print "Moving on, you level up!"
 	player.LevelUp(self, 50, 1500, 20, 50)
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	raw_input("Enter any key to continue: ")
-	Planet3B(player)
+	Planet3B()
 	print "Moving on, you level up!"
 	player.LevelUp(self, 50, 1500, 20, 50)
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	raw_input("Enter any key to continue: ")
-	Planet4(player)
+	Planet4()
 	print "Moving on, you level up!"
 	player.LevelUp(self, 50, 1500, 20, 50)
 	player.AddForcePoints(lightside=40,darkside=40,neutral=40)
 	raw_input("Enter any key to continue: ")
-	Planet5(player)
+	Planet5()
 	print "GAME OVER."
 
 player = Player(name)
