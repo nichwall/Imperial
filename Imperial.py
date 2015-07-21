@@ -6,7 +6,8 @@ name = raw_input('Character name: ')
 print "Hello, {}. Welcome to the Empire.".format(name)
 
 ##########################################################################################################################################################
-#Classes
+# Classes
+##########################################################################################################################################################
 
 # Weapons! Can be extended to be used on ships or something. Either way, makes it a lot easier to add additional
 # weapons to the game.
@@ -19,7 +20,7 @@ class Weapon:
 		self.name = name
 		self.melee = meleeInfo
 		self.ranged = rangedInfo
-	def recreateFromString(self, string):
+	def loadString(self, string):
 		splitted = string.split("\t")
 		self.name = splitted[0]
 		self.melee['damage'] = splitted[1]
@@ -38,7 +39,7 @@ class Ship:
 	def __init__(self,shipname="Ship",speed=1):
 		self.name = shipname
 		self.speed = speed
-	def recreateFromString(self, string):
+	def loadString(self, string):
 		splitted = string.split("\t")
 		self.name = splitted[0]
 		self.speed = splitted[1]
@@ -79,6 +80,10 @@ class Player:
 	def EarnCredits(self,amount):
 		self.credit += amount
 		print "You gain {} credits, and now have {} credits.".format(amount, player.credit)
+	def loadString(self, string):
+		pass
+	def saveString(self):
+		pass
 
 class Creature:
 	def __init__(self,name="",health=100,baseAtk=100):
